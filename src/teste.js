@@ -69,10 +69,21 @@ function calcularValorCompra(formaDePagamento, itens) {
     if (somenteExtra) {
         return console.log('Item extra não pode ser pedido sem o principal');
     }
+
+    if (formaDePagamento === "dinheiro") {
+        valorTotal *= 0.95;
+    } else if (formaDePagamento === "credito") {
+        valorTotal *= 1.03;
+    } else if (formaDePagamento !== "debito") {
+        return "Forma de pagamento inválida!";
+    }
+
+    const valorTotalCompra = valorTotal.toFixed(2);
+
+    return console.log(`Valor total da compra: R$ ${valorTotalCompra}`);
 }
 
 const itens = ['chantily,1', 'cafe,1'];
-const formaPagamento = "credito";
+const formaDePagamento = 'credito';
 
-const valorTotalCompra = calcularValorCompra(formaPagamento, itens);
-//console.log(`Valor total da compra: R$ ${valorTotalCompra}`);
+calcularValorCompra(formaDePagamento, itens);
