@@ -31,12 +31,12 @@ const cardapio = [
     },
     {
         nome: 'combo1',
-        extra: false,
+        extra: true,
         valor: 9.50
     },
     {
         nome: 'combo2',
-        extra: false,
+        extra: true,
         valor: 7.50
     }
 ];
@@ -44,6 +44,10 @@ const cardapio = [
 function calcularValorCompra(formaDePagamento, itens) {
     let valorTotal = 0;
     let somenteExtra = true;
+    let chantily = false;
+    let queijo = false;
+    let cafe = false;
+    let sanduiche = false;
 
     if (itens.length === 0) {
         return console.log('Não há itens no carrinho de compra!');
@@ -61,12 +65,28 @@ function calcularValorCompra(formaDePagamento, itens) {
 
         valorTotal += acharProduto.valor * quantidade;
 
-        if (!acharProduto.extra) {
-            somenteExtra = false;
+        if (nomeProduto === "chantily") {
+            chantily = true;
+        }
+
+        if (nomeProduto === "queijo") {
+            queijo = true;
+        }
+
+        if (nomeProduto === "cafe") {
+            cafe = true;
+        }
+
+        if (nomeProduto === "sanduiche") {
+            sanduiche = true;
         }
     }
 
-    if (somenteExtra) {
+    if (queijo && !sanduiche) {
+        return console.log('Item extra não pode ser pedido sem o principal');
+    }
+
+    if (chantily && !cafe) {
         return console.log('Item extra não pode ser pedido sem o principal');
     }
 
@@ -75,7 +95,7 @@ function calcularValorCompra(formaDePagamento, itens) {
     } else if (formaDePagamento === "credito") {
         valorTotal *= 1.03;
     } else if (formaDePagamento !== "debito") {
-        return "Forma de pagamento inválida!";
+        return console.log("Forma de pagamento inválida!");;
     }
 
     const valorTotalCompra = valorTotal.toFixed(2);
@@ -83,7 +103,7 @@ function calcularValorCompra(formaDePagamento, itens) {
     return console.log(`Valor total da compra: R$ ${valorTotalCompra}`);
 }
 
-const itens = ['chantily,1', 'cafe,1'];
-const formaDePagamento = 'credito';
+const itens = ['cafe,1', 'chantily,1'];
+const formaDePagamento = 'debito';
 
 calcularValorCompra(formaDePagamento, itens);

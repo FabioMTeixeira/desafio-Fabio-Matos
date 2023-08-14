@@ -1,87 +1,121 @@
-const cardapio = [
-    {
-        nome: 'cafe',
-        extra: false,
-        valor: 3.00
-    },
-    {
-        nome: 'chantily',
-        extra: true,
-        valor: 1.50
-    },
-    {
-        nome: 'suco',
-        extra: false,
-        valor: 6.20
-    },
-    {
-        nome: 'sanduiche',
-        extra: false,
-        valor: 6.50
-    },
-    {
-        nome: 'queijo',
-        extra: true,
-        valor: 2.00
-    },
-    {
-        nome: 'salgado',
-        extra: false,
-        valor: 7.25
-    },
-    {
-        nome: 'combo1',
-        extra: false,
-        valor: 9.50
-    },
-    {
-        nome: 'combo2',
-        extra: false,
-        valor: 7.50
+class Cardapio {
+    constructor() {
+        this.itens = [
+            {
+                nome: 'cafe',
+                extra: false,
+                valor: 3.00
+            },
+            {
+                nome: 'chantily',
+                extra: true,
+                valor: 1.50
+            },
+            {
+                nome: 'suco',
+                extra: false,
+                valor: 6.20
+            },
+            {
+                nome: 'sanduiche',
+                extra: false,
+                valor: 6.50
+            },
+            {
+                nome: 'queijo',
+                extra: true,
+                valor: 2.00
+            },
+            {
+                nome: 'salgado',
+                extra: false,
+                valor: 7.25
+            },
+            {
+                nome: 'combo1',
+                extra: false,
+                valor: 9.50
+            },
+            {
+                nome: 'combo2',
+                extra: false,
+                valor: 7.50
+            }
+        ];
     }
-];
-class CaixaDaLanchonete {
 
-    calcularValorDaCompra(metodoDePagamento, itens) {
+    getItem(nome) {
+        return this.itens.find(item => item.nome === nome);
+    }
+}
+class CaixaDaLanchonete {
+    constructor() {
+        this.cardapio = new Cardapio();
+    }
+
+    calcularValorDaCompra(formaDePagamento, itens) {
         let valorTotal = 0;
-        let somenteExtra = true;
+        let chantily = false;
+        let queijo = false;
+        let cafe = false;
+        let sanduiche = false;
 
         if (itens.length === 0) {
-            return console.log('Não há itens no carrinho de compra!');
+            return ('Não há itens no carrinho de compra!');
         }
 
         for (const item of itens) {
             const separador = item.split(',');
             const nomeProduto = separador[0];
             const quantidade = Number(separador[1]);
-            const acharProduto = cardapio.find((produto) => produto.nome === nomeProduto);
+            const acharProduto = this.cardapio.getItem(nomeProduto);
 
             if (!acharProduto) {
-                return console.log('Item inválido!');
+                return 'Item inválido!';
+            }
+
+            if (quantidade === 0) {
+                return 'Quantidade inválida!';
             }
 
             valorTotal += acharProduto.valor * quantidade;
 
-            if (!acharProduto.extra) {
-                somenteExtra = false;
+            if (nomeProduto === "chantily") {
+                chantily = true;
+            }
+
+            if (nomeProduto === "queijo") {
+                queijo = true;
+            }
+
+            if (nomeProduto === "cafe") {
+                cafe = true;
+            }
+
+            if (nomeProduto === "sanduiche") {
+                sanduiche = true;
             }
         }
 
-        if (somenteExtra) {
-            return console.log('Item extra não pode ser pedido sem o principal');
+        if (queijo && !sanduiche) {
+            return 'Item extra não pode ser pedido sem o principal';
         }
 
-        if (metodoDePagamento === "dinheiro") {
+        if (chantily && !cafe) {
+            return 'Item extra não pode ser pedido sem o principal';
+        }
+
+        if (formaDePagamento === "dinheiro") {
             valorTotal *= 0.95;
-        } else if (metodoDePagamento === "credito") {
+        } else if (formaDePagamento === "credito") {
             valorTotal *= 1.03;
-        } else if (metodoDePagamento !== "debito") {
+        } else if (formaDePagamento !== "debito") {
             return "Forma de pagamento inválida!";
         }
 
         const valorTotalCompra = valorTotal.toFixed(2);
 
-        return console.log(`Valor total da compra: R$ ${valorTotalCompra}`);
+        return `R$ ${valorTotalCompra.replace('.', ',')}`;
     }
 }
 
