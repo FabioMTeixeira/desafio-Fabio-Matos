@@ -1,6 +1,6 @@
 const cardapio = [
     {
-        nome: 'café',
+        nome: 'cafe',
         extra: false,
         valor: 3.00
     },
@@ -15,7 +15,7 @@ const cardapio = [
         valor: 6.20
     },
     {
-        nome: 'sanduíche',
+        nome: 'sanduiche',
         extra: false,
         valor: 6.50
     },
@@ -43,13 +43,35 @@ const cardapio = [
 
 function calcularValorCompra(formaDePagamento, itens) {
     let valorTotal = 0;
+    let somenteExtra = true;
 
     if (itens.length === 0) {
         return console.log('Não há itens no carrinho de compra!');
     }
+
+    for (const item of itens) {
+        const separador = item.split(',');
+        const nomeProduto = separador[0];
+        const quantidade = Number(separador[1]);
+        const acharProduto = cardapio.find((produto) => produto.nome === nomeProduto);
+
+        if (!acharProduto) {
+            return console.log('Item inválido!');
+        }
+
+        valorTotal += acharProduto.valor * quantidade;
+
+        if (!acharProduto.extra) {
+            somenteExtra = false;
+        }
+    }
+
+    if (somenteExtra) {
+        return console.log('Item extra não pode ser pedido sem o principal');
+    }
 }
 
-const itens = [];
+const itens = ['chantily,1', 'cafe,1'];
 const formaPagamento = "credito";
 
 const valorTotalCompra = calcularValorCompra(formaPagamento, itens);
